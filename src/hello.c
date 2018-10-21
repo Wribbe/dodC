@@ -1,8 +1,7 @@
-#include <stdlib.h>
-#include <stdio.h>
+#include "lib.h"
 
 int
 main(void)
 {
-  printf("HELLO WORLD!\n");
+  lib_hello();
 }

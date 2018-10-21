@@ -17,19 +17,22 @@ CC := gcc
 
 F_GENERAL := --std=c11
 F_ERRORS := -Wall -Wextra -Wpedantic
+F_LIBS := -I$(DIR_LIB)
 
 C_FLAGS := \
 	$(F_GENERAL) \
-	$(F_ERRORS)
+	$(F_ERRORS) \
+	$(F_LIBS)
 
 EXECS := $(patsubst %.c,$(DIR_EXEC)/%,$(notdir $(wildcard $(DIR_EXEC_SRC)/*.c)))
+FILES_LIB := $(wildcard $(DIR_LIB)/*)
 
 all: $(EXECS)
 
-$(EXECS) : | $(DIRS)
+$(EXECS) : $(FILES_LIB) | $(DIRS)
 
 $(DIR_EXEC)/% : %.c
-	$(CC) $(C_FLAGS) $^ -o $@
+	$(CC) $(C_FLAGS) $(filter %.c,$^) -o $@
 
 $(DIRS):
 	@[ -d $@ ] || mkdir -p $@
