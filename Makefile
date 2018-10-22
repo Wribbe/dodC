@@ -16,11 +16,13 @@ DIRS := \
 CC := gcc
 
 F_GENERAL := --std=c11
+F_DEBUG:= -g
 F_ERRORS := -Wall -Wextra -Wpedantic
 F_LIBS := -I$(DIR_LIB)
 
 C_FLAGS := \
 	$(F_GENERAL) \
+	$(F_DEBUG) \
 	$(F_ERRORS) \
 	$(F_LIBS)
 
