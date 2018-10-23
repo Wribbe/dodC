@@ -6,10 +6,14 @@
 #include <stdint.h>
 #include <string.h>
 
+#include <GL/gl3w.h>
+#include <GLFW/glfw3.h>
+
 typedef uint8_t id_scene;
 typedef uint16_t id_object;
 typedef uint16_t id_matrix_transform;
 typedef uint16_t id_data_vertices;
+typedef uint16_t id_data_VAO;
 
 typedef float m4[4][4];
 
@@ -30,6 +34,7 @@ struct objects {
   int16_t z[NUM_OBJECTS];
   id_data_vertices id_vertices[NUM_OBJECTS];
   int16_t num_vertices[NUM_OBJECTS];
+  id_data_VAO id_VAO[NUM_OBJECTS];
 };
 
 extern id_scene num_current_scenes;
