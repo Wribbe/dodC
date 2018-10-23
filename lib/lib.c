@@ -1,4 +1,3 @@
-#include "lib.h"
 #include "lib_internal.h"
 
 id_scene num_current_scenes = 0;
@@ -57,6 +56,9 @@ void
 scene_run(id_scene id)
 {
   printf("Running scene %u\n", id);
+  while (!glfwWindowShouldClose(SCENE(id)->window)) {
+    glfwPollEvents();
+  }
 }
 
 void
@@ -64,6 +66,10 @@ scene_destroy(id_scene id)
 {
   free(SCENE(id));
   SCENE(id) = NULL;
+  num_current_scenes--;
+  if (num_current_scenes == 0) {
+    graphicslib_terminate();
+  }
 }
 
 id_scene
@@ -77,6 +83,49 @@ scene_init()
     }
     memset(SCENE(id_new),0,sizeof(struct scene));
   }
+  if (num_current_scenes == 0) {
+    /* Initialize GLFW library. */
+    SCENE(id_new)->window = graphicslib_init();
+  }
   num_current_scenes++;
   return id_new;
+}
+
+GLFWwindow *
+graphicslib_init()
+{
+  if (!glfwInit()) {
+    err("%s\n", "Could not initialize glfw.");
+    return NULL;
+  }
+
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+  uint16_t screen_width = 800;
+  uint16_t screen_height = 600;
+  const char * screen_title = "Main Dod.";
+
+  GLFWwindow * window = glfwCreateWindow(screen_width, screen_height,
+      screen_title, NULL, NULL);
+
+  if (window == NULL) {
+    err("%s\n", "Could not create a window.\n");
+    return NULL;
+  }
+
+  glfwMakeContextCurrent(window);
+  if (gl3wInit()) {
+    err("%s\n", "Could not initialize gl3w.");
+    graphicslib_terminate();
+    return NULL;
+  }
+  return window;
+}
+
+void
+graphicslib_terminate()
+{
+  glfwTerminate();
 }

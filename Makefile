@@ -7,7 +7,8 @@ DIR_GL3W := gl3w
 
 vpath %.c\
 	$(DIR_EXEC_SRC) \
-	$(DIR_LIB)
+	$(DIR_LIB) \
+	$(DIR_GL3W)/src
 
 DIRS := \
 	$(DIR_EXEC) \
@@ -17,7 +18,7 @@ DIRS := \
 
 CC := gcc
 
-F_GENERAL := --std=c11
+F_GENERAL := --std=c11 -lpthread -lm
 F_DEBUG:= -g
 F_ERRORS := -Wall -Wextra -Wpedantic
 F_LIBS := -I$(DIR_LIB) -I$(DIR_GL3W)/include
@@ -40,10 +41,10 @@ FILES_LIB := $(wildcard $(DIR_LIB)/*)
 
 all: $(EXECS)
 
-$(EXECS) : $(FILES_LIB) Makefile | $(DIRS)
+$(EXECS) : $(FILES_LIB) Makefile gl3w.c | $(DIRS)
 
 $(DIR_EXEC)/% : %.c
-	$(CC) $(C_FLAGS) $(filter %.c,$^) -o $@
+	$(CC) $(filter %.c,$^) -o $@ $(C_FLAGS)
 
 # gl3w related.
 # -------------

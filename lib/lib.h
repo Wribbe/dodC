@@ -18,6 +18,7 @@ typedef uint16_t id_data_VAO;
 typedef float m4[4][4];
 
 #define LEN(x) (sizeof(x)/sizeof(x[0]))
+#define err(fmt, ...) (fprintf(stderr, fmt, __VA_ARGS__))
 
 #define NUM_MEMARENA_VERT 1024
 #define SIZE_VERTEX 3
@@ -45,6 +46,7 @@ struct scene {
   uint16_t num_vertices_occupied;
   struct objects objects;
   struct memarena_vertex vertices;
+  GLFWwindow * window;
 };
 
 id_scene
