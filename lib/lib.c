@@ -4,14 +4,53 @@
 id_scene num_current_scenes = 0;
 struct scene * scenes[256] = {0};
 
-#define ID_ENSURE_ZERO_IS_ERROR(id) (id+1)
-#define SCENE(id) (scenes[id-1])
-
 id_scene
 scene_create_basic()
 {
-  id_scene id = scene_init();
-  return id;
+  id_scene id_scene = scene_init();
+  shape_triangle(id_scene, object_get(id_scene));
+  return id_scene;
+}
+
+id_object
+object_get(id_scene id)
+{
+  return SCENE(id)->num_objects_occupied++;
+}
+
+void
+shape_triangle(id_scene id_scene, id_object id_object)
+{
+  size_t num_vertices = 3;
+  float data_triangle[] = {
+    -0.5f, -0.5f,  0.0f,
+     0.5f, -0.0f,  0.0f,
+     0.0f,  0.5f,  0.0f,
+  };
+  id_data_vertices id_vertices = vertices_get(id_scene, num_vertices);
+  data_vertices_write(VERTEX_POINTER(id_scene, id_vertices),
+      sizeof(data_triangle), data_triangle);
+
+  struct objects * objects = OBJECTS(id_scene);
+  objects->x[id_object] = 0;
+  objects->y[id_object] = 0;
+  objects->z[id_object] = 0;
+  objects->id_vertices[id_object] = id_vertices;
+  objects->num_vertices[id_object] = num_vertices;
+}
+
+id_data_vertices
+vertices_get(id_scene id_scene, size_t num_vertices)
+{
+  id_data_vertices start = SCENE(id_scene)->num_vertices_occupied;
+  SCENE(id_scene)->num_vertices_occupied += num_vertices*SIZE_VERTEX;
+  return start;
+}
+
+void
+data_vertices_write(float * start, size_t size_data, float * data)
+{
+  memcpy(start, data, size_data);
 }
 
 void
@@ -24,6 +63,7 @@ void
 scene_destroy(id_scene id)
 {
   free(SCENE(id));
+  SCENE(id) = NULL;
 }
 
 id_scene

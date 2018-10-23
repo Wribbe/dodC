@@ -13,28 +13,31 @@ typedef uint16_t id_data_vertices;
 
 typedef float m4[4][4];
 
+#define LEN(x) (sizeof(x)/sizeof(x[0]))
+
 #define NUM_MEMARENA_VERT 1024
+#define SIZE_VERTEX 3
 
 struct memarena_vertex {
-  uint32_t index_free;
   float data[NUM_MEMARENA_VERT];
 };
 
 #define NUM_OBJECTS 100
 
 struct objects {
-  uint8_t num_occupied;
   int16_t x[NUM_OBJECTS];
   int16_t y[NUM_OBJECTS];
   int16_t z[NUM_OBJECTS];
   id_data_vertices id_vertices[NUM_OBJECTS];
-  m4 matrix_transform[NUM_OBJECTS];
+  int16_t num_vertices[NUM_OBJECTS];
 };
 
 extern id_scene num_current_scenes;
 extern struct scene * scenes[];
 
 struct scene {
+  uint8_t num_objects_occupied;
+  uint16_t num_vertices_occupied;
   struct objects objects;
   struct memarena_vertex vertices;
 };
